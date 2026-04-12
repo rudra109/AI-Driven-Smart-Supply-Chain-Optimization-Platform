@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable standalone output for Docker deployment (Render)
-  output: 'standalone',
-  // Suppress build-time warnings about missing env vars
+  // Suppress build-time warnings/errors during production build on Render
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
 };

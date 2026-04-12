@@ -27,7 +27,7 @@ services:
     runtime: node
     region: oregon
     plan: free
-    rootDir: frontend
+    rootDir: .
     buildCommand: npm install --legacy-peer-deps && npm run build
     startCommand: npm start
     envVars:
