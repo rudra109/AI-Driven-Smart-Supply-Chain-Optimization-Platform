@@ -1,18 +1,21 @@
-# render.yaml — Render Blueprint for AnvayaAI Supply Chain Platform
-# Deploys both backend (FastAPI) and frontend (Next.js) as separate Web Services
+# render.yaml — AnvayaAI Supply Chain Platform
+# Native runtimes (Python + Node) — simpler & faster than Docker on Render free tier
 # Docs: https://render.com/docs/blueprint-spec
 
 services:
+
   # ── 1. FastAPI Backend ────────────────────────────────────────────────────
   - type: web
     name: anvayaai-backend
-    runtime: docker
-    dockerfilePath: ./Dockerfile
-    rootDir: .
+    runtime: python
+    region: oregon
     plan: free
+    rootDir: .
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: PORT
-        value: 8000
+      - key: PYTHON_VERSION
+        value: 3.11.0
       - key: PYTHON_ENV
         value: production
     healthCheckPath: /health
@@ -21,22 +24,20 @@ services:
   # ── 2. Next.js Frontend ──────────────────────────────────────────────────
   - type: web
     name: anvayaai-frontend
-    runtime: docker
-    dockerfilePath: ./frontend/Dockerfile
-    rootDir: .
+    runtime: node
+    region: oregon
     plan: free
+    rootDir: frontend
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm start
     envVars:
-      - key: PORT
-        value: 3000
+      - key: NODE_VERSION
+        value: 20.9.0
       - key: NODE_ENV
         value: production
+      # ⚠️ After first deploy, replace with your actual backend Render URL:
+      # e.g. https://anvayaai-backend.onrender.com
       - key: NEXT_PUBLIC_BACKEND_URL
-        value: https://ai-driven-smart-supply-chain.onrender.com
-      - key: NEXT_PUBLIC_SUPABASE_URL
-        value: https://xzwqdvwohuyvezhlarya.supabase.co
-      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
-        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6d3FkdndvaHV5vezhlaryaIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MjcwOTIsImV4cCI6MjA5MTUwMzA5Mn0.-nIDLzbG9QmMVap-3XHWJ6Ftu4ClmH5gJ7jXQUz29wo
-      - key: GOOGLE_GENERATIVE_AI_API_KEY
-        value: AIzaSyDAhbiPOUnu1BEOkb0Qrf1cUWpBTJv25M4
+        value: https://anvayaai-backend.onrender.com
     healthCheckPath: /
     autoDeploy: true
