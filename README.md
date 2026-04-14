@@ -228,7 +228,7 @@ Make sure you have the following installed:
 ### Step 1 — Clone the Repository
 
 ```bash
-git clone https://github.com/GopeshKachhadiya/supplychain.git
+git clone https://github.com/rudra109/AI-Driven-Smart-Supply-Chain-Optimization-Platform
 cd supplychain
 ```
 
